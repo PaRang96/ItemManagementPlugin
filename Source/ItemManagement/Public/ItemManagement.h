@@ -4,6 +4,12 @@
 
 #include "Modules/ModuleManager.h"
 
+UENUM()
+enum class EItemType : uint8
+{
+	E_Consumable
+};
+
 class FItemManagementModule : public IModuleInterface
 {
 public:
