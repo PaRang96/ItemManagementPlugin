@@ -29,6 +29,9 @@ struct FItemBasicInfo
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Metadata")
 	int32 ItemValue;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Metadata")
+	bool bAllowStack;
 };
 
 UCLASS()

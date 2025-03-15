@@ -2,6 +2,7 @@
 
 
 #include "InventoryComponent.h"
+#include "ItemBase.h"
 
 UInventoryComponent::UInventoryComponent()
 {
@@ -11,5 +12,76 @@ UInventoryComponent::UInventoryComponent()
 void UInventoryComponent::BeginPlay()
 {
 	Super::BeginPlay();
+}
+
+bool UInventoryComponent::AcquireItem(TSubclassOf<UItemBase> NewItem, int32 Quantity)
+{
+	if (Cast<UItemBase>(NewItem.Get())->AssetItems[0].bAllowStack)
+	{
+		return AddItem_Stackable(NewItem, Quantity);
+	}
+	else
+	{
+		return AddItem_NonStackable(NewItem);
+	}
+}
+
+bool UInventoryComponent::UseItem(TSubclassOf<UItemBase> TargetItem, int32 Quantity)
+{
+	if (Cast<UItemBase>(TargetItem.Get())->AssetItems[0].bAllowStack)
+	{
+		return RemoveItem_Stackable(TargetItem, Quantity);
+	}
+	else
+	{
+		return RemoveItem_NonStackable(TargetItem);
+	}
+}
+
+bool UInventoryComponent::AddItem_NonStackable(TSubclassOf<UItemBase> NewItem)
+{
+	auto NewItemPtr = Cast<UItemBase>(NewItem.Get());
+	UniqueItems.Add(NewItemPtr);
+	if (UniqueItems.Find(NewItemPtr) != INDEX_NONE)
+	{
+		return true;
+	}
+	return false;
+}
+
+bool UInventoryComponent::AddItem_Stackable(TSubclassOf<UItemBase> NewItem, int32 Quantity)
+{
+	if (StackableItems.Contains(NewItem))
+	{
+		StackableItems.Add(NewItem, *StackableItems.Find(NewItem) + Quantity);
+		return true;
+	}
+	else
+	{
+		StackableItems.Add(NewItem, Quantity);
+		return true;
+	}
+}
+
+bool UInventoryComponent::RemoveItem_NonStackable(TSubclassOf<UItemBase> TargetItem)
+{
+	auto TargetItemPtr = Cast<UItemBase>(TargetItem.Get());
+	if (UniqueItems.Find(TargetItemPtr) == INDEX_NONE)
+	{
+		return false;
+	}
+	UniqueItems.Remove(TargetItemPtr);
+	return true;
+}
+
+bool UInventoryComponent::RemoveItem_Stackable(TSubclassOf<UItemBase> TargetItem, int32 Quantity)
+{
+	if (!StackableItems.Contains(TargetItem))
+	{
+		return false;
+	}
+	int32 NewQuantity = *StackableItems.Find(TargetItem) - Quantity;
+	StackableItems.Add(TargetItem, NewQuantity);
+	return true;
 }
 

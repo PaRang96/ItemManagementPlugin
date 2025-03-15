@@ -19,14 +19,23 @@ protected:
 	virtual void BeginPlay() override;
 
 private:
-	TMap<TSubclassOf<UItemBase>, int32> Items;
+	// map consists of: item - quantity pair => for stackable items
+	TMap<TSubclassOf<UItemBase>, int32> StackableItems;
+
+	// for non-stackable items
+	TArray<TObjectPtr<UItemBase>> UniqueItems;
 
 public:
-	/*void AcquireItem();
+	UFUNCTION(BlueprintCallable)
+	bool AcquireItem(TSubclassOf<UItemBase> NewItem, int32 Quantity = 1);
 
-	void DropItem();
+	UFUNCTION(BlueprintCallable)
+	bool UseItem(TSubclassOf<UItemBase> TargetItem, int32 Quantity = 1);
 
-	void UseItem();
+private:
+	bool AddItem_NonStackable(TSubclassOf<UItemBase> NewItem);
+	bool AddItem_Stackable(TSubclassOf<UItemBase> NewItem, int32 Quantity = 1);
 
-	void SubmitItem();*/
+	bool RemoveItem_NonStackable(TSubclassOf<UItemBase> TargetItem);
+	bool RemoveItem_Stackable(TSubclassOf<UItemBase> TargetItem, int32 Quantity = 1);
 };
