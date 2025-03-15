@@ -4,8 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "ConsumableItemBase.h"
+#include "ItemBase.h"
 #include "InventoryComponent.generated.h"
+
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnInventoryItemAdded, TSubclassOf<UItemBase> AddedItem);
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnInventoryItemRemoved, TSubclassOf<UItemBase> RemovedItem);
 
 UCLASS( ClassGroup=(ItemControl), meta=(BlueprintSpawnableComponent), Blueprintable )
 class ITEMMANAGEMENT_API UInventoryComponent : public UActorComponent
@@ -16,7 +19,8 @@ public:
 	UInventoryComponent();
 
 protected:
-	virtual void BeginPlay() override;
+	// @todo: when save system implemented, Begin Play should be overriden
+	virtual void BeginPlay();
 
 private:
 	// map consists of: item - quantity pair => for stackable items
@@ -38,4 +42,8 @@ private:
 
 	bool RemoveItem_NonStackable(TSubclassOf<UItemBase> TargetItem);
 	bool RemoveItem_Stackable(TSubclassOf<UItemBase> TargetItem, int32 Quantity = 1);
+
+protected:
+	FOnInventoryItemAdded OnInventoryItemAdded;
+	FOnInventoryItemRemoved OnInventoryItemRemoved;
 };

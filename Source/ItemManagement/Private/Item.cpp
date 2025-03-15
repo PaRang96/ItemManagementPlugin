@@ -5,6 +5,7 @@
 #include "ItemBase.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/SphereComponent.h"
+#include "Engine/StaticMesh.h"
 
 AItem::AItem()
 {
@@ -21,17 +22,6 @@ AItem::AItem()
 	{
 		InteractionRange->SetupAttachment(StaticMesh);
 	}
-
-	if (ItemData != NULL)
-	{
-		auto Data = Cast<UItemBase>(ItemData.Get())->AssetItems[0];
-		Type = Data.ItemType;
-		auto Mesh = Data.ItemMesh.Get();
-		if (Mesh)
-		{
-			StaticMesh->SetStaticMesh(Mesh);
-		}
-	}
 }
 
 void AItem::BeginPlay()
@@ -44,17 +34,6 @@ void AItem::BeginPlay()
 			this, &ThisClass::OnBeginInteraction);
 		InteractionRange->OnComponentEndOverlap.AddDynamic(
 			this, &ThisClass::OnEndInteraction);
-	}
-
-	switch (Type)
-	{
-	case EItemType::E_Consumable:
-		break;
-	case EItemType::E_Gear:
-		break;
-	default:
-		checkNoEntry();
-		break;
 	}
 }
 
@@ -75,11 +54,9 @@ void AItem::OnBeginInteraction(UPrimitiveComponent* OverlappedComponent,
 	AActor* OtherActor, UPrimitiveComponent* OtherComp,  int32 OtherBodyIndex, 
 	bool bFromSweep, const FHitResult& SweepResult)
 {
-
 }
 
 void AItem::OnEndInteraction(UPrimitiveComponent* OverlappedComponent, 
 	AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-
 }

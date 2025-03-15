@@ -24,28 +24,26 @@ protected:
 	virtual void EndPlay(EEndPlayReason::Type EndPlayReason) override;
 
 private:
-	EItemType Type;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Item", 
-		meta = (AllowPrivateAccess= true))
-	TSubclassOf<UItemBase> ItemData;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Appearance",
-		meta = (AllowPrivateAccess = true))
-	TObjectPtr<UStaticMeshComponent> StaticMesh;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Interaction",
 		meta = (AllowPrivateAccess = true))
 	TObjectPtr<USphereComponent> InteractionRange;
 
 protected:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	EItemType Type;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Appearance",
+		meta = (AllowPrivateAccess = true))
+	TObjectPtr<UStaticMeshComponent> StaticMesh;
+
 	UFUNCTION()
-	void OnBeginInteraction(UPrimitiveComponent* OverlappedComponent, 
+	virtual void OnBeginInteraction(UPrimitiveComponent* OverlappedComponent, 
 		AActor* OtherActor, UPrimitiveComponent* OtherComp, 
 		int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
 	UFUNCTION()
-	void OnEndInteraction(UPrimitiveComponent* OverlappedComponent, 
+	virtual void OnEndInteraction(UPrimitiveComponent* OverlappedComponent, 
 		AActor* OtherActor, UPrimitiveComponent* OtherComp, 
 		int32 OtherBodyIndex);
 };

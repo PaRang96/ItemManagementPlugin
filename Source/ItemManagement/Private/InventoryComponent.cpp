@@ -2,7 +2,6 @@
 
 
 #include "InventoryComponent.h"
-#include "ItemBase.h"
 
 UInventoryComponent::UInventoryComponent()
 {
@@ -44,6 +43,7 @@ bool UInventoryComponent::AddItem_NonStackable(TSubclassOf<UItemBase> NewItem)
 	UniqueItems.Add(NewItemPtr);
 	if (UniqueItems.Find(NewItemPtr) != INDEX_NONE)
 	{
+		OnInventoryItemAdded.Broadcast(NewItem);
 		return true;
 	}
 	return false;
@@ -54,11 +54,13 @@ bool UInventoryComponent::AddItem_Stackable(TSubclassOf<UItemBase> NewItem, int3
 	if (StackableItems.Contains(NewItem))
 	{
 		StackableItems.Add(NewItem, *StackableItems.Find(NewItem) + Quantity);
+		OnInventoryItemAdded.Broadcast(NewItem);
 		return true;
 	}
 	else
 	{
 		StackableItems.Add(NewItem, Quantity);
+		OnInventoryItemAdded.Broadcast(NewItem);
 		return true;
 	}
 }
@@ -70,6 +72,7 @@ bool UInventoryComponent::RemoveItem_NonStackable(TSubclassOf<UItemBase> TargetI
 	{
 		return false;
 	}
+	OnInventoryItemRemoved.Broadcast(TargetItem);
 	UniqueItems.Remove(TargetItemPtr);
 	return true;
 }
@@ -81,6 +84,7 @@ bool UInventoryComponent::RemoveItem_Stackable(TSubclassOf<UItemBase> TargetItem
 		return false;
 	}
 	int32 NewQuantity = *StackableItems.Find(TargetItem) - Quantity;
+	OnInventoryItemRemoved.Broadcast(TargetItem);
 	StackableItems.Add(TargetItem, NewQuantity);
 	return true;
 }

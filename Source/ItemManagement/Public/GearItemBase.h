@@ -37,6 +37,9 @@ struct FGearItemInfo : public FItemBasicInfo
 
 	FGearItemInfo() { ItemType = EItemType::E_Gear; };
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "MetaData")
+	EGearType GearType;
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Requirements")
 	TArray<FAttributeRequirement> RequiredStats;
 };
