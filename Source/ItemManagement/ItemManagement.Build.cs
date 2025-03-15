@@ -24,6 +24,9 @@ public class ItemManagement : ModuleRules
 			new string[]
 			{
 				"Core",
+				"GameplayAbilities",
+				"GameplayTags",
+				"GameplayTasks"
 			}
 			);
 			

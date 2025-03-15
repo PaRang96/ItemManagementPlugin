@@ -4,48 +4,31 @@
 
 #include "CoreMinimal.h"
 #include "Engine/DataAsset.h"
-#include "ItemManagement.h"
+#include "ItemBase.h"
+#include "GameplayEffect.h"
 #include "ConsumableItemBase.generated.h"
 
-UENUM(BlueprintType)
-enum class EDurationType : uint8
+USTRUCT(BlueprintType)
+struct FConsumeEffect
 {
-	E_None				UMETA(DisplayName = "None"),
-	E_Instant			UMETA(DisplayName = "Instant"),
-	E_Persistent		UMETA(DisplayName = "Persists over Time"),
-	E_MAX				UMETA(DisplayName = "Max")
+	GENERATED_USTRUCT_BODY()
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Effect")
+	float EffectMagnitude;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Effect")
+	TSubclassOf<UGameplayEffect> EffectToApply;
 };
 
 USTRUCT(Atomic, BlueprintType)
-struct FConsumableItemInfo
+struct FConsumableItemInfo : public FItemBasicInfo
 {
 	GENERATED_USTRUCT_BODY()
 
 	FConsumableItemInfo() { ItemType = EItemType::E_Consumable; };
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Metadata")
-	EItemType ItemType;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Metadata")
-	FText ItemName;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Metadata")
-	FText Description;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Metadata")
-	TObjectPtr<UTexture2D> ItemIcon;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Metadata")
-	TObjectPtr<UStaticMesh> ItemMesh;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Metadata")
-	EDurationType DurationType;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Metadata")
-	float AffectAmount;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Metadata")
-	int32 ItemValue;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Effect")
+	TArray<FConsumeEffect> Effects;
 };
 
 UCLASS(BlueprintType)

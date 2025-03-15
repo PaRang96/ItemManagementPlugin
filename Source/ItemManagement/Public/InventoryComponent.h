@@ -19,5 +19,14 @@ protected:
 	virtual void BeginPlay() override;
 
 private:
-	TMap<UConsumableItemBase*, int32> Consumables;
+	TMap<TSubclassOf<UItemBase>, int32> Items;
+
+public:
+	/*void AcquireItem();
+
+	void DropItem();
+
+	void UseItem();
+
+	void SubmitItem();*/
 };

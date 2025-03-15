@@ -4,10 +4,11 @@
 
 #include "Modules/ModuleManager.h"
 
-UENUM()
+UENUM(BlueprintType)
 enum class EItemType : uint8
 {
-	E_Consumable
+	E_Consumable,
+	E_Gear,
 };
 
 class FItemManagementModule : public IModuleInterface
